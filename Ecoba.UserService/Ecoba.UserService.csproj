@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>085ab007-cc24-4b11-ab59-88a98730b8e4</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.4.1"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.3"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.3"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.3"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0"/>
+    <PackageReference Include="Microsoft.Graph" Version="4.0.0"/>
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.16.0"/>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.3"/>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0"/>
+    <PackageReference Include="Nvd.ServiceDiscovery.Consul" Version="1.0.0"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3"/>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.16.0"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0"/>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.3"/>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2"/>
+    <PackageReference Include="TimeZoneConverter" Version="5.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1"/>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,16 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP .NET Core service.
+
+version: '3.4'
+
+services:
+  ecobaapigateway:
+    image: ecb-identity-service
+    container_name: identity-service
+    build:
+      context: .
+      dockerfile: Ecoba.IdentityService/Dockerfile
+    environment:
+      - ServiceConfig__serviceDiscoveryAddress=http://192.168.0.172:8500
+      - ServiceConfig__serviceAddress=http://identity-service
+      - ServiceConfig__serviceName=identity-service
+      - ServiceConfig__serviceId=2

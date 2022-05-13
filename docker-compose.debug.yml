@@ -1,0 +1,56 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP .NET Core service.
+
+version: '3.4'
+
+services:
+  api-gateway:
+    image: hoangtd1706/api-gateway
+    ports:
+      - 5001:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - GlobalConfiguration__ServiceDiscoveryProvider__Host=consul
+      - Jwt__Key=ECOBA_API_KEY_@2020
+      - Jwt__KeyService=ECOBA_API_SERVICE_KEY_@2020
+
+  user-service:
+    image: user-service
+    container_name: user-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ServiceConfig__serviceDiscoveryAddress=http://consul:8500
+      - ServiceConfig__serviceAddress=http://user-service
+      - ServiceConfig__serviceName=user-service
+      - ServiceConfig__serviceId=3
+      - ConnectionStrings__DefaultConnection=Host=192.168.0.172;Port=5432;Username=postgres;Password=Ecoba@2020;Database=IdentityDB;
+      - Jwt__Key=ECOBA_API_KEY_@2020
+      - Jwt__KeyService=ECOBA_API_SERVICE_KEY_@2020
+    build:
+      context: .
+      dockerfile: Ecoba.UserService/Dockerfile
+
+  # pgdata:
+  #   hostname: ecoba_database
+  #   image: postgres:latest
+  #   ports:
+  #     - 5433:5432
+  #   restart: always
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+  #   environment:
+  #     POSTGRES_USER: "postgres"
+  #     POSTGRES_PASSWORD: "1234"
+  #     POSTGRES_DB: "IdentityDB"
+
+  consul:
+    container_name: consul
+    image: consul:latest
+    hostname: consul
+    ports:
+      - 5500:8500
+    command: consul agent -dev -log-level=warn -ui -client=0.0.0.0
+    environment:
+      - CONSUL_LOCAL_CONFIG={"server":true}
+
+volumes:
+  pgdata:
