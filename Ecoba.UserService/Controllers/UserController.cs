@@ -35,7 +35,7 @@ public class UserController : ControllerBase
             _memoryCache.Set("users", users, cacheEntryOptions);
         }
         if (users != null) return Ok(users);
-        return BadRequest();
+        return BadRequest(end_point);
     }
 
     private async Task<IEnumerable<User>> GetUser(string uri, string token)
