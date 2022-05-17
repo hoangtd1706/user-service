@@ -1,40 +1,23 @@
 using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using Ecoba.AzureAuth;
+using Ecoba.Consul.ServiceQuery;
 using ServiceDiscovery.Consul;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddMemoryCache();
 
-builder.Services.AddAuthentication(o =>
-{
-    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
- {
-     options.RequireHttpsMetadata = false;
-     options.TokenValidationParameters = new TokenValidationParameters
-     {
-         ValidateIssuer = true,
-         ValidateAudience = true,
-         ValidateLifetime = true,
-         ValidateIssuerSigningKey = true,
-         ValidIssuer = builder.Configuration.GetSection("Jwt:Issuer").Value,
-         ValidAudience = builder.Configuration.GetSection("Jwt:Audience").Value,
-         IssuerSigningKeys = new[]{
-             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Jwt:Key").Value)),
-             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Jwt:KeyService").Value)),
-         },
-     };
- });
+var jwtConfig = builder.Configuration.GetSection("Jwt").Get<JwtConfig>();
+builder.Services.AddAzureAuthScheme(jwtConfig);
+
+builder.Services.AddScoped<IConsulService, ConsulService>();
 
 var serverConfig = builder.Configuration.GetServiceConfig();
 builder.Services.AddConsul(serverConfig);
 
+// builder.Services.AddControllers().AddJsonOptions(option => option.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -50,6 +33,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAzureAuth();
 
 app.UseAuthentication();
 

@@ -22,19 +22,29 @@ public class UserController : ControllerBase
         _memoryCache = memoryCache;
     }
 
+    [HttpGet("test")]
+    public string Index()
+    {
+        return "test";
+    }
+
     [HttpGet]
-    public async Task<ActionResult> GetAll([FromQuery] string token)
+    public async Task<ActionResult> GetAll()
     {
         var end_point = $"{URI_MS_GRAPH_API}/users?$select=displayName,givenName,jobTitle,mail,mobilePhone,officeLocation,preferredLanguage,surname,userPrincipalName,id,employeeID";
         end_point += "&$filter=startsWith(employeeID,'-1') or startsWith(employeeID,'0') or startsWith(employeeID,'1') or startsWith(employeeID,'2') or startsWith(employeeID,'3') or startsWith(employeeID,'4') or startsWith(employeeID,'5') or startsWith(employeeID,'6') or startsWith(employeeID,'7') or startsWith(employeeID,'8') or startsWith(employeeID,'9')";
-        IEnumerable<User> users;
-        if (!_memoryCache.TryGetValue("users", out users))
+        if (Request.Headers.TryGetValue("Authorization", out var tokenAzure))
         {
-            users = await GetUser(end_point, token);
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(30));
-            _memoryCache.Set("users", users, cacheEntryOptions);
+            IEnumerable<User> users;
+            if (!_memoryCache.TryGetValue("users", out users))
+            {
+                var token = tokenAzure.ToString().Substring(tokenAzure.ToString().IndexOf(" ") + 1);
+                users = await GetUser(end_point, token);
+                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(30));
+                _memoryCache.Set("users", users, cacheEntryOptions);
+            }
+            if (users != null) return Ok(users);
         }
-        if (users != null) return Ok(users);
         return BadRequest(end_point);
     }
 
@@ -61,33 +71,41 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("me")]
-    public async Task<ActionResult> GetProfile([FromQuery] string token)
+    public async Task<ActionResult> GetProfile()
     {
         var end_point = $"{URI_MS_GRAPH_API}/me?$select=displayName,givenName,jobTitle,mail,mobilePhone,officeLocation,preferredLanguage,surname,userPrincipalName,id,employeeID";
         HttpClient _client = new HttpClient();
-        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        HttpResponseMessage response = await _client.GetAsync(end_point);
-        if (response.IsSuccessStatusCode)
+        if (Request.Headers.TryGetValue("Authorization", out var tokenAzure))
         {
-            var res = await response.Content.ReadAsAsync<User>();
-            return Ok(res);
+            var token = tokenAzure.ToString().Substring(tokenAzure.ToString().IndexOf(" ") + 1);
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage response = await _client.GetAsync(end_point);
+            if (response.IsSuccessStatusCode)
+            {
+                var res = await response.Content.ReadAsAsync<User>();
+                return Ok(res);
+            }
         }
         return BadRequest();
     }
 
     [HttpGet("photo")]
-    public async Task<ActionResult> GetPhoto([FromQuery] string token)
+    public async Task<ActionResult> GetPhoto()
     {
-        var end_point = $"{URI_MS_GRAPH_API}/me/photo/$value";
-        HttpClient _client = new HttpClient();
-        _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        HttpResponseMessage response = await _client.GetAsync(end_point);
-        if (response.IsSuccessStatusCode)
+        if (Request.Headers.TryGetValue("Authorization", out var tokenAzure))
         {
-            var res = await response.Content.ReadAsStreamAsync();
-            return Ok(res);
+            var token = tokenAzure.ToString().Substring(tokenAzure.ToString().IndexOf(" ") + 1);
+            var end_point = $"{URI_MS_GRAPH_API}/me/photo/$value";
+            HttpClient _client = new HttpClient();
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage response = await _client.GetAsync(end_point);
+            if (response.IsSuccessStatusCode)
+            {
+                var res = await response.Content.ReadAsStreamAsync();
+                return Ok(res);
+            }
         }
         return BadRequest();
     }
