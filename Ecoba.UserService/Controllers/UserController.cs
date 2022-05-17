@@ -33,7 +33,7 @@ public class UserController : ControllerBase
     {
         var end_point = $"{URI_MS_GRAPH_API}/users?$select=displayName,givenName,jobTitle,mail,mobilePhone,officeLocation,preferredLanguage,surname,userPrincipalName,id,employeeID";
         end_point += "&$filter=startsWith(employeeID,'-1') or startsWith(employeeID,'0') or startsWith(employeeID,'1') or startsWith(employeeID,'2') or startsWith(employeeID,'3') or startsWith(employeeID,'4') or startsWith(employeeID,'5') or startsWith(employeeID,'6') or startsWith(employeeID,'7') or startsWith(employeeID,'8') or startsWith(employeeID,'9')";
-        if (Request.Headers.TryGetValue("Authorization", out var tokenAzure))
+        if (Request.Headers.TryGetValue("azure-token", out var tokenAzure))
         {
             IEnumerable<User> users;
             if (!_memoryCache.TryGetValue("users", out users))
@@ -45,7 +45,7 @@ public class UserController : ControllerBase
             }
             if (users != null) return Ok(users);
         }
-        return BadRequest(end_point);
+        return BadRequest(tokenAzure);
     }
 
     private async Task<IEnumerable<User>> GetUser(string uri, string token)
@@ -75,7 +75,7 @@ public class UserController : ControllerBase
     {
         var end_point = $"{URI_MS_GRAPH_API}/me?$select=displayName,givenName,jobTitle,mail,mobilePhone,officeLocation,preferredLanguage,surname,userPrincipalName,id,employeeID";
         HttpClient _client = new HttpClient();
-        if (Request.Headers.TryGetValue("Authorization", out var tokenAzure))
+        if (Request.Headers.TryGetValue("azure-token", out var tokenAzure))
         {
             var token = tokenAzure.ToString().Substring(tokenAzure.ToString().IndexOf(" ") + 1);
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -93,7 +93,7 @@ public class UserController : ControllerBase
     [HttpGet("photo")]
     public async Task<ActionResult> GetPhoto()
     {
-        if (Request.Headers.TryGetValue("Authorization", out var tokenAzure))
+        if (Request.Headers.TryGetValue("azure-token", out var tokenAzure))
         {
             var token = tokenAzure.ToString().Substring(tokenAzure.ToString().IndexOf(" ") + 1);
             var end_point = $"{URI_MS_GRAPH_API}/me/photo/$value";
