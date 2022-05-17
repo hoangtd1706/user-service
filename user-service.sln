@@ -5,6 +5,12 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecoba.UserService", "Ecoba.UserService\Ecoba.UserService.csproj", "{307BA5EB-F689-489E-82A7-9149F1417AE8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecoba.AzureAuth", "Ecoba.AzureAuth\Ecoba.AzureAuth.csproj", "{11F31D9E-C91D-4BCE-A801-FF61F288ADC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecoba.BaseService", "Ecoba.BaseService\Ecoba.BaseService.csproj", "{CED222C5-1EA3-4519-9876-36533742422E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecoba.Consul.ServiceQuery", "Ecoba.Consul.ServiceQuery\Ecoba.Consul.ServiceQuery.csproj", "{9299D746-3005-4BFB-B794-1DB96121E8E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +24,17 @@ Global
 		{307BA5EB-F689-489E-82A7-9149F1417AE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{307BA5EB-F689-489E-82A7-9149F1417AE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{307BA5EB-F689-489E-82A7-9149F1417AE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11F31D9E-C91D-4BCE-A801-FF61F288ADC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11F31D9E-C91D-4BCE-A801-FF61F288ADC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11F31D9E-C91D-4BCE-A801-FF61F288ADC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11F31D9E-C91D-4BCE-A801-FF61F288ADC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CED222C5-1EA3-4519-9876-36533742422E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CED222C5-1EA3-4519-9876-36533742422E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CED222C5-1EA3-4519-9876-36533742422E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CED222C5-1EA3-4519-9876-36533742422E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9299D746-3005-4BFB-B794-1DB96121E8E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9299D746-3005-4BFB-B794-1DB96121E8E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9299D746-3005-4BFB-B794-1DB96121E8E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9299D746-3005-4BFB-B794-1DB96121E8E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
