@@ -7,6 +7,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 using Ecoba.UserService.Model;
 using Newtonsoft.Json.Linq;
+using System.Security.Claims;
 
 namespace Ecoba.UserService.Controllers;
 
@@ -17,15 +18,20 @@ public class UserController : ControllerBase
 {
     private readonly string URI_MS_GRAPH_API = "https://graph.microsoft.com/v1.0";
     private IMemoryCache _memoryCache;
+    protected string[] ADMIN_NUMBER = new string[] { "0000", "-1000", "-10001" };
     public UserController(IMemoryCache memoryCache)
     {
         _memoryCache = memoryCache;
     }
 
-    [HttpGet("test")]
-    public string Index()
+    [HttpGet("admin")]
+    public ActionResult CheckAdmin()
     {
-        return "test";
+        var userNumber = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+        if (userNumber == null)
+            return Unauthorized();
+        if (ADMIN_NUMBER.Contains(userNumber)) return Ok(true);
+        return Forbid();
     }
 
     [HttpGet]
