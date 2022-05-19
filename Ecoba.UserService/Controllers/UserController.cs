@@ -13,7 +13,7 @@ namespace Ecoba.UserService.Controllers;
 
 [ApiController]
 [Route("api/v1/users")]
-// [Authorize]
+[Authorize]
 public class UserController : ControllerBase
 {
     private readonly string URI_MS_GRAPH_API = "https://graph.microsoft.com/v1.0";
@@ -31,7 +31,7 @@ public class UserController : ControllerBase
         if (userNumber == null)
             return Unauthorized();
         if (ADMIN_NUMBER.Contains(userNumber)) return Ok(true);
-        return Forbid();
+        return Ok(false);
     }
 
     [HttpGet]
